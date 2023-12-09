@@ -1,5 +1,5 @@
 
-# N-Joy Stats - Radiosender NDR Musikanalyse-Tool
+# N-Joy Stats - NDR Musikanalyse-Tool
 
 N-Joy Stats ist ein leistungsstarkes Analysetool, das entwickelt wurde, um sämtliche Songs, die auf dem Radiosender N-Joy vom NDR gespielt werden, zu erfassen, zu protokollieren und in anschaulichen Grafiken darzustellen. Mit diesem Tool können Sie die Wiedergabe-Häufigkeit von Songs pro Stunde, Minute und pro Tag visualisieren, um wertvolle Einblicke in die Musikrotation des Senders zu erhalten.
 
