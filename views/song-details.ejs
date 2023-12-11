@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= song.title %> - Details</title>
+    <link rel="stylesheet" href="/stylesdetails.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="back-button">
+            <a href="/">↩ Back to Song List</a>
+        </div>
+        <div class="song-details">
+            <div class="song-cover">
+                <img src="<%= song.cover_url %>" alt="<%= song.title %> Cover">
+            </div>
+            <div class="song-stats">
+                <h1><%= song.title %></h1>
+                <h2>by <%= song.artist %></h2>
+                <p>Played <%= song.play_count %> times</p>
+                <p>Played this week: <%= stats.playCountThisWeek %></p>
+                <p>Played last 30 days: <%= stats.playCountLast30Days %></p>
+                <p>Played this year: <%= stats.playCountThisYear %></p>
+            </div>
+
+        </div>
+        <div class="chart-container">
+            <canvas id="playTimeChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="playTimeChartMinute"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="playTimeChartDay"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="playTimeChartDate"></canvas>
+        </div>
+        
+        
+
+    </div>
+
+    <script>
+
+    // Initialize Chart for Play Count by Hour
+    const ctxHour = document.getElementById('playTimeChart').getContext('2d');
+    const playTimeChart = new Chart(ctxHour, {
+        type: 'line',
+        data: {
+            labels: <%- JSON.stringify(chartDataHour.labels) %>,
+            datasets: [{
+                label: 'Play Count by Hour',
+                data: <%- JSON.stringify(chartDataHour.playCounts) %>,
+                borderColor: '#a0bb16',
+                backgroundColor: 'rgba(160, 187, 22, 1)',
+                fill: true,
+                borderWidth: 2,
+                tension: 0.5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            elements: {
+                line: {
+                    tension: 0.4
+                },
+                point: {
+                    radius: 0
+                }
+            }
+        }
+    });
+
+    const ctxMinute = document.getElementById('playTimeChartMinute').getContext('2d');
+    const playTimeChartMinute = new Chart(ctxMinute, {
+        type: 'line',
+        data: {
+            labels: <%- JSON.stringify(chartDataMinute.labels) %>,
+            datasets: [{
+                label: 'Play Count by Minute',
+                data: <%- JSON.stringify(chartDataMinute.playCounts) %>,
+                borderColor: '#a0bb16',
+                backgroundColor: 'rgba(160, 187, 22, 1)',
+                fill: true,
+                borderWidth: 2,
+                tension: 0.5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            elements: {
+                line: {
+                    tension: 0.4
+                },
+                point: {
+                    radius: 0
+                }
+            }
+        }
+    });
+
+    const ctxDay = document.getElementById('playTimeChartDay').getContext('2d');
+    const playTimeChartDay = new Chart(ctxDay, {
+        type: 'line',
+        data: {
+            labels: <%- JSON.stringify(chartDataDay.labels) %>,
+            datasets: [{
+                label: 'Play Count by Day',
+                data: <%- JSON.stringify(chartDataDay.playCounts) %>,
+                borderColor: '#a0bb16',
+                backgroundColor: 'rgba(160, 187, 22, 1)',
+                fill: true,
+                borderWidth: 2,
+                tension: 0.5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            elements: {
+                line: {
+                    tension: 0.2
+                },
+                point: {
+                    radius: 0
+                }
+            }
+        }
+    });
+
+    const ctxDate = document.getElementById('playTimeChartDate').getContext('2d');
+    const playTimeChartDate = new Chart(ctxDate, {
+        type: 'line',
+        data: {
+            labels: <%- JSON.stringify(chartDataPerDay.labels) %>,
+            datasets: [{
+                label: 'Play Count by Day',
+                data: <%- JSON.stringify(chartDataPerDay.playCounts) %>,
+                borderColor: '#a0bb16',
+                backgroundColor: 'rgba(160, 187, 22, 1)',
+                fill: true,
+                borderWidth: 2,
+                tension: 0.5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            elements: {
+                line: {
+                    tension: 0.2
+                },
+                point: {
+                    radius: 0
+                }
+            }
+        }
+    });
+    
+    </script>
+
+    
+    
+</body>
+</html>

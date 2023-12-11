@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-Joy</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+            <h1>Song List</h1>
+            <form action="/" method="GET">
+                <select name="time_range" id="timeRangeSelect" onchange="toggleDatePicker(this.value);">
+                    <option value="last_day" <% if (timeRange === 'last_day') { %>selected<% } %>>Last Day</option>
+                    <option value="last_7_days" <% if (timeRange === 'last_7_days') { %>selected<% } %>>Last 7 Days</option>
+                    <option value="last_30_days" <% if (timeRange === 'last_30_days') { %>selected<% } %>>Last 30 Days</option>
+                    <option value="last_year" <% if (timeRange === 'last_year') { %>selected<% } %>>Last Year</option>
+                    <option value="custom" <% if (timeRange === 'custom') { %>selected<% } %>>Custom Range</option>
+                </select>
+                <div id="datePicker" class="date-picker">
+                    <input type="text" name="from_date" placeholder="From Date">
+                    <input type="text" name="to_date" placeholder="To Date">
+                </div>
+                <button type="submit">Sort</button>
+            </div>
+        </form>
+    </header>
+    <div class="container song-grid" id="songsContainer">
+        <% songs.forEach(song => { %>
+            <a href="/song/<%= encodeURIComponent(song.title) %>/<%= encodeURIComponent(song.artist) %>" class="song-card">
+                <img src="<%= song.cover_url %>" alt="Cover" class="song-cover">
+                <div class="song-info">
+                    <h2><%= song.title %></h2>
+                    <p>Artist: <%= song.artist %></p>
+                    <p>Play Count: <%= song.play_count %></p>
+                </div>
+            </a>
+        <% }) %>
+    </div>
+    <button id="loadMore" onclick="loadMoreSongs()">Load More Songs</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("input[name='from_date']", {
+                enableTime: false,
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "F j, Y"
+            });
+    
+            flatpickr("input[name='to_date']", {
+                enableTime: false,
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "F j, Y"
+            });
+    
+            var timeRangeSelect = document.getElementById('timeRangeSelect');
+            toggleDatePicker(timeRangeSelect.value);
+        });
+    
+        function toggleDatePicker(value) {
+            var datePicker = document.getElementById('datePicker');
+            if (value === 'custom') {
+                datePicker.style.display = 'flex'; // Change to 'flex' to align in one line
+            } else {
+                datePicker.style.display = 'none';
+            }
+        }
+    </script>
+    
+    
+    <script>
+    function loadMoreSongs(offset) {
+        var timeRange = document.getElementById('timeRangeSelect').value;
+        var fromDate = document.querySelector('input[name="from_date"]').value;
+        var toDate = document.querySelector('input[name="to_date"]').value;
+
+        var xhr = new XMLHttpRequest();
+        var url = '/?ajax=1&offset=' + offset + '&time_range=' + timeRange;
+        if (timeRange === 'custom') {
+            url += '&from_date=' + encodeURIComponent(fromDate) + '&to_date=' + encodeURIComponent(toDate);
+        }
+
+        xhr.open('GET', url, true);
+        xhr.onload = function() {
+            if (this.status === 200) {
+                var songs = JSON.parse(this.responseText);
+                var html = '';
+                for (var i = 0; i < songs.length; i++) {
+                    html += `
+                        <a href="/song/${encodeURIComponent(songs[i].title)}/${encodeURIComponent(songs[i].artist)}" class="song-card">
+                            <img src="${songs[i].cover_url}" alt="Cover" class="song-cover">
+                            <div class="song-info">
+                                <h2>${songs[i].title}</h2>
+                                <p>Artist: ${songs[i].artist}</p>
+                                <p>Play Count: ${songs[i].play_count}</p>
+                            </div>
+                        </a>`;
+                }
+                document.getElementById('songsContainer').innerHTML += html;
+                document.getElementById('loadMore').onclick = function() {
+                    loadMoreSongs(offset + 100);
+                };
+            }
+        };
+        xhr.send();
+    }
+
+    // Initial call with offset 0
+    loadMoreSongs(0);
+</script>
+
+    </script>
+</body>
+</html>
